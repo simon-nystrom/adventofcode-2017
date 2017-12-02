@@ -1,4 +1,4 @@
-file = open("day2-input.txt")
+file = open("input-2.txt")
 chart = [x.strip() for x in file.readlines()]
 file.close()
 
