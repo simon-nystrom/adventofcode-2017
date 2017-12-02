@@ -2,13 +2,32 @@ file = open("day2-input.txt")
 chart = [x.strip() for x in file.readlines()]
 file.close()
 
-def solve(chart):
-    result = 0;
+
+def solve1(chart):
+    result = 0
     for l in chart:
         row = [int(x) for x in l.split('\t')]
-        row_max = max(row)
-        row_min = min(row)
-        result += row_max - row_min
+        result += max(row) - min(row)
     return result
 
-print(solve(chart))
+
+def solve2(chart):
+    result = 0
+    for l in chart:
+        row = [int(x) for x in l.split('\t')]
+        result += row_result(row)
+
+    return result
+
+
+def row_result(row):
+    for i, x in enumerate(row):
+        for j, y in enumerate(row):
+            if x % y == 0 and i != j:
+                return x // y
+            elif y % x == 0 and i != j:
+                return  y // x
+
+
+print(solve1(chart))
+print(solve2(chart))
