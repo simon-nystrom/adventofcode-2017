@@ -80,15 +80,13 @@ def spiral_loop(grid, row, col, offset):
 
 def solve2(puzzle_input):
     current_value = 0
-    layers = needed_layers(puzzle_input) + 5
+    layers = needed_layers(puzzle_input) + 3
     grid = [[0 for x in range(layers)] for y in range(layers)]
     row = col = layers // 2  # Start in the middle
     grid[row][col] = 1
-    i = 0
     spiral_gen = spiral_loop(grid, row, col, 2)
     while current_value <= puzzle_input:
         current_value = next(spiral_gen)
-        i += 1
     return current_value
 
 
