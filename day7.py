@@ -3,7 +3,7 @@ puzzle_input = [x.strip() for x in file.readlines()]
 file.close()
 
 
-def find_bottom(puzzle_input):
+def find_bottom_and_build_maps(puzzle_input):
     stack = []
     values = {}
     connections = {}
@@ -70,14 +70,14 @@ def stack_weight(root, values, connections):
 
 def solve1(puzzle_input):
 
-    _, bottom, _ = find_bottom(puzzle_input)
+    _, bottom, _ = find_bottom_and_build_maps(puzzle_input)
 
     return bottom
 
 
 def solve2(puzzle_input):
 
-    values, bottom, connections = find_bottom(puzzle_input)
+    values, bottom, connections = find_bottom_and_build_maps(puzzle_input)
 
     bad_stack_and_diff = find_bad_stack(bottom, values, connections, 0)
 
