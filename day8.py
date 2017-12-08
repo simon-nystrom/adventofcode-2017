@@ -2,16 +2,13 @@ file = open("input-8.txt")
 puzzle_input = [x.strip() for x in file.readlines()]
 file.close()
 
-print(puzzle_input)
-
-
-def solve1(puzzle_input):
+def solve(puzzle_input):
 
     registers = {}
+    highest_ever = 0
 
     for i in puzzle_input:
         line = i.split()
-        print(line)
         reg = line[0]
         instr = line[1]
         amount = int(line[2])
@@ -43,14 +40,10 @@ def solve1(puzzle_input):
             if registers[pred[0]] != int(pred[2]):
                 registers[reg] += amount
         
-        print(line)
-        print(registers)
+        highest_ever = max(highest_ever, max([registers[x] for x in registers]))
 
-    return max([registers[x] for x in registers])
+    
+    return (max([registers[x] for x in registers]), highest_ever)
 
 
-def solve2(puzzle_input):
-    return
-
-print(solve1(puzzle_input))
-print(solve2(puzzle_input))
+print(solve(puzzle_input))
