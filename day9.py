@@ -2,16 +2,13 @@ file = open("input-9.txt")
 puzzle_input = file.read()
 file.close()
 
-# print(puzzle_input)
 
 def solve(puzzle_input):
     group_stack = []
     open_garbage = False
-    i = -1
-    score = 0
-    groups = 0
-    while i < len(puzzle_input) - 1:
-        i += 1
+    score = removed_garbage = i = 0
+    while i < len(puzzle_input):
+
         if puzzle_input[i] == '!':
             i += 1
 
@@ -20,19 +17,20 @@ def solve(puzzle_input):
 
         elif puzzle_input[i] == '>':
             open_garbage = False
-        
+
         elif puzzle_input[i] == '{' and not open_garbage:
             group_stack.append('{')
 
         elif puzzle_input[i] == '}' and not open_garbage:
-            groups += 1
             score += len(group_stack)
             group_stack.pop()
 
+        elif open_garbage:
+            removed_garbage += 1
 
+        i += 1
 
-    
-    return score, groups
+    return score, removed_garbage
 
 
 print(solve(puzzle_input))
