@@ -1,6 +1,8 @@
 file = open("input-13.txt")
-puzzle_input = [list(map(int, x.strip().replace(":", "").split(' '))) for x in file.readlines()]
+puzzle_input = [list(map(int, x.strip().replace(":", "").split(' ')))
+                for x in file.readlines()]
 file.close()
+
 
 def solve(puzzle_input):
 
@@ -16,12 +18,12 @@ def solve(puzzle_input):
 
     return severity
 
+
 def solve1(puzzle_input):
     scanner_pos = 0
     delay = 0
-    max_reach = 0
     detected = True
-    while (detected):
+    while detected:
         for i, depth in puzzle_input:
             detected = False
             loop = (i + delay) // (depth - 1)
@@ -33,10 +35,8 @@ def solve1(puzzle_input):
                 break
         delay += 1
 
-    # print(max_reach)
     return delay - 1
 
 
 print(solve(puzzle_input))
 print(solve1(puzzle_input))
-
