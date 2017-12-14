@@ -7,7 +7,6 @@ file.close()
 def solve(puzzle_input):
 
     severity = 0
-    scanner_pos = 0
     for i, depth in puzzle_input:
         loop = i // (depth - 1)
         scanner_pos = i % (depth - 1)
@@ -20,7 +19,6 @@ def solve(puzzle_input):
 
 
 def solve1(puzzle_input):
-    scanner_pos = 0
     delay = 0
     detected = True
     while detected:
