@@ -49,7 +49,7 @@ def solve1(puzzle_input):
     return hashed[0] * hashed[1]
 
 
-def solve2(puzzle_input):
+def knot_hash(puzzle_input):
     sparse_hashed = sparse_hash(puzzle_input, 64)
 
     output = []
@@ -63,5 +63,10 @@ def solve2(puzzle_input):
     return knot_hash
 
 
-print(solve1(puzzle_input_1))
-print(solve2(puzzle_input_2))
+
+def main():
+    print(solve1(puzzle_input_1))
+    print(knot_hash(puzzle_input_2))
+
+if __name__ == '__main__':
+    main()

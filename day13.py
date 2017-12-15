@@ -5,7 +5,6 @@ file.close()
 
 
 def solve(puzzle_input):
-
     severity = 0
     for i, depth in puzzle_input:
         loop = i // (depth - 1)
