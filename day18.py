@@ -5,7 +5,6 @@ file.close()
 
 
 def jgz(a, b, registers):
-    print("jgz", a, b)
     jump_offset = 0
     if a.isalpha():
         if registers[a] <= 0:
@@ -22,7 +21,6 @@ def jgz(a, b, registers):
 
 
 def mul(a, b, registers):
-    print("mul", a, b)
     if not a in registers:
         registers[a] = 0
     if b.isalpha():
@@ -32,7 +30,6 @@ def mul(a, b, registers):
 
 
 def add(a, b, registers):
-    print("add", a, b)
     if not a in registers:
         registers[a] = 0
     if b.isalpha():
@@ -42,7 +39,6 @@ def add(a, b, registers):
 
 
 def _set(a, b, registers):
-    print("set", a, b)
     if b.isalpha():
         registers[a] = registers[b]
     else:
@@ -50,7 +46,6 @@ def _set(a, b, registers):
 
 
 def mod(a, b, registers):
-    print("mod", a, b)
     if not a in registers:
         registers[a] = 0
     if b.isalpha():
@@ -60,12 +55,10 @@ def mod(a, b, registers):
 
 
 def rcv(a, registers):
-    print("rcv", a)
     return registers[a]
 
 
 def snd(a, registers):
-    print("snd", a)
     return registers[a]
 
 
@@ -73,40 +66,102 @@ pattern = re.compile(
     "((jgz|mul|add|set|mod)\s([a-z0-9]+)\s(-?[a-z0-9]+))|((snd|rcv)\s(\w))")
 
 
+def process_two_piece_instruction(instruction, a, b, register):
+    if instruction == "set":
+        _set(a, b, register)
+
+    elif instruction == "add":
+        add(a, b, register)
+
+    elif instruction == "mod":
+        mod(a, b, register)
+
+    elif instruction == "mul":
+        mul(a, b, register)
+
+
 def solve1(puzzle_input):
 
-    registers = {}
+    register = {}
     current_instruction = 0
     last_played_sound = 0
 
     while True:
         instruction = pattern.match(puzzle_input[current_instruction])
 
-        if instruction.group(2) == "set":
-            _set(instruction.group(3), instruction.group(4), registers)
+        process_two_piece_instruction(
+            instruction.group(2),
+            instruction.group(3),
+            instruction.group(4),
+            register
+        )
 
-        elif instruction.group(2) == "add":
-            add(instruction.group(3), instruction.group(4), registers)
-
-        elif instruction.group(2) == "mod":
-            mod(instruction.group(3), instruction.group(4), registers)
-
-        elif instruction.group(2) == "mul":
-            mul(instruction.group(3), instruction.group(4), registers)
-
-        elif instruction.group(2) == "jgz":
-            jump = jgz(instruction.group(3), instruction.group(4), registers)
+        if instruction.group(2) == "jgz":
+            jump = jgz(instruction.group(3), instruction.group(4), register)
             if jump != 0:
                 current_instruction += jump
                 continue
 
         elif instruction.group(6) == "snd":
-            last_played_sound = snd(instruction.group(7), registers)
+            last_played_sound = snd(instruction.group(7), register)
 
         elif instruction.group(6) == "rcv":
-            if rcv(instruction.group(7), registers) > 0:
+            if rcv(instruction.group(7), register) > 0:
                 return last_played_sound
 
         current_instruction += 1
 
+
+def _rcv(a, register, message_queue, sends):
+    if len(message_queue) == 0:
+        return False
+    register[a] = message_queue[0]
+    del message_queue[0]
+    return True
+
+
+def _snd(a, register, message_queue):
+    message_queue.append(register[a])
+
+
+def solve2(puzzle_input):
+    register_one = {"p": 1}
+    message_queues = [[], []]
+    registers = [{"p": 0}, {"p": 1}]
+    pcs = [0, 0]
+    active_program = 0
+    sends = [0, 0]
+    while True:
+        instruction = pattern.match(puzzle_input[pcs[active_program]])
+
+        process_two_piece_instruction(
+            instruction.group(2),
+            instruction.group(3),
+            instruction.group(4),
+            registers[active_program]
+        )
+
+        if instruction.group(2) == "jgz":
+            jump = jgz(instruction.group(3), instruction.group(
+                4), registers[active_program])
+            if jump != 0:
+                pcs[active_program] += jump
+                continue
+
+        elif instruction.group(6) == "snd":
+            _snd(instruction.group(7),
+                 registers[active_program], message_queues[active_program])
+            sends[active_program] += 1
+
+        elif instruction.group(6) == "rcv":
+            if len(message_queues[0]) == 0 and len(message_queues[1]) == 0:
+                return sends[1]
+            if not _rcv(instruction.group(7), registers[active_program], message_queues[active_program ^ 1], sends):
+                active_program ^= 1
+                continue
+
+        pcs[active_program] += 1
+
+
 print(solve1(puzzle_input))
+print(solve2(puzzle_input))
