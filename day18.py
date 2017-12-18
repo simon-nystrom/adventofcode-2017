@@ -112,7 +112,7 @@ def solve1(puzzle_input):
         current_instruction += 1
 
 
-def _rcv(a, register, message_queue, sends):
+def _rcv(a, register, message_queue):
     if len(message_queue) == 0:
         return False
     register[a] = message_queue[0]
